@@ -1,19 +1,21 @@
 #[macro_use]
 extern crate dotenv_codegen;
 use dotenv::dotenv;
-use std::env;
+// use std::env;
 
 use actix_web::{
-    web::{
-      get,
-      post,
-    },
-    App, 
-    HttpServer, 
-    Responder
+  web::{
+    get,
+    post,
+  },
+  App, 
+  HttpServer, 
+  // Responder
 };
 
-use mongodb::{Client, options::ClientOptions};
+use mongodb::{Client, options::ClientOptions };
+
+// use anyhow::{Context, Result};
 
 // Below this line are local folders and files.
 mod controllers;
@@ -43,17 +45,21 @@ pub struct AppState {
 }
 
 #[actix_web::main]
-async fn main() -> std::io::Result<()> {
+async fn main() -> std::io::Result<()> { 
+// async fn main() -> std::io::Result<()> { 
   dotenv().ok();
 
   let target = "127.0.0.1:8000";
   println!("Actix will be ready at {}", target);
 
-  // Move to db/mongodb.rs if you can.
-  // Remove unwrap() parts.
-  let client_options = ClientOptions::parse(dotenv!("MONGODB_LOCAL")).await.unwrap();
-  // let client_options = ClientOptions::parse("mongodb://localhost:27017").await.unwrap();
-  let client = Client::with_options(client_options).unwrap();
+  // It is difficult extract this to function because types used here are private.
+  // You can still extract this with a macro.
+  let client_options = ClientOptions::parse(dotenv!("MONGODB_LOCAL"))
+    .await.expect("There was a problem with mongodb client options."); // ? won't work here
+
+  let client = Client::with_options(client_options)
+    .expect("Failed to making a mongodb client."); // ? won't work here.
+
   let db = client.database("rust");
   
   let contact_collection = db.collection("contact");

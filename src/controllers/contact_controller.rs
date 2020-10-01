@@ -37,7 +37,7 @@ pub async fn create(
       HttpResponse::Ok().json(result.inserted_id) // Return contacts data instead of this.
     },
     Err(e) => {
-      println!("Error while getting, {:#?}", e);
+      println!("Error while creating a contact, {:#?}", e);
       HttpResponse::InternalServerError().finish()
     }
   }
@@ -58,7 +58,7 @@ pub async fn find_by_email(
       }
     }
     Err(e) => {
-      println!("Error while find a contact by email, {:#?}", e);
+      println!("Error while finding a contact by email, {:#?}", e);
       HttpResponse::InternalServerError().finish()
     }
   }
